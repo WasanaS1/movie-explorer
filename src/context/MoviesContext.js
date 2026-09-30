@@ -11,6 +11,17 @@ function friendlyError(err) {
   return 'Something went wrong talking to TMDb. Please try again.';
 }
 
+// TMDb's /search/movie endpoint doesn't accept genre/year/rating params, so when a
+// search term AND filters are both active, narrow the search results client-side.
+function applyClientFilters(movies, filters) {
+  return movies.filter((movie) => {
+    if (filters.genreId && !movie.genre_ids?.includes(Number(filters.genreId))) return false;
+    if (filters.year && movie.release_date?.slice(0, 4) !== String(filters.year)) return false;
+    if (filters.minRating && movie.vote_average < Number(filters.minRating)) return false;
+    return true;
+  });
+}
+
 export function MoviesProvider({ children }) {
   const [query, setQuery] = useState(() => localStorage.getItem(LAST_QUERY_KEY) || '');
   const [filters, setFilters] = useState({ genreId: '', year: '', minRating: '' });
@@ -39,7 +50,9 @@ export function MoviesProvider({ children }) {
         const data = query.trim()
           ? await searchMovies(query.trim(), targetPage)
           : await discoverMovies({ ...filters, page: targetPage });
-        setResults((prev) => (append ? [...prev, ...data.results] : data.results));
+        const pageResults =
+          query.trim() && hasActiveFilters ? applyClientFilters(data.results, filters) : data.results;
+        setResults((prev) => (append ? [...prev, ...pageResults] : pageResults));
         setPage(data.page);
         setTotalPages(data.total_pages);
       } catch (err) {
