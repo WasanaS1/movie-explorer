@@ -29,17 +29,16 @@ export function MoviesProvider({ children }) {
 
   const fetchPage = useCallback(
     async (targetPage, { append } = { append: false }) => {
+      if (!query.trim() && !hasActiveFilters) {
+        setResults([]);
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
-        let data;
-        if (query.trim()) {
-          data = await searchMovies(query.trim(), targetPage);
-        } else if (hasActiveFilters) {
-          data = await discoverMovies({ ...filters, page: targetPage });
-        } else {
-          data = await getTrendingMovies(targetPage);
-        }
+        const data = query.trim()
+          ? await searchMovies(query.trim(), targetPage)
+          : await discoverMovies({ ...filters, page: targetPage });
         setResults((prev) => (append ? [...prev, ...data.results] : data.results));
         setPage(data.page);
         setTotalPages(data.total_pages);

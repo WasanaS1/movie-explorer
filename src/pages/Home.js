@@ -6,6 +6,7 @@ import MovieGrid from '../components/MovieGrid';
 export default function Home() {
   const {
     query,
+    filters,
     results,
     loading,
     error,
@@ -16,11 +17,12 @@ export default function Home() {
     trendingError,
   } = useMovies();
 
-  const isBrowsing = !query.trim();
+  const hasActiveFilters = Boolean(filters.genreId || filters.year || filters.minRating);
+  const isFilteredOrSearching = Boolean(query.trim()) || hasActiveFilters;
 
   return (
     <Container sx={{ py: 3 }}>
-      {isBrowsing && (
+      {!isFilteredOrSearching && (
         <Box sx={{ mb: 4 }}>
           <Typography variant="h5" component="h2" gutterBottom>
             Trending This Week
@@ -38,19 +40,21 @@ export default function Home() {
 
       <Box>
         <Typography variant="h5" component="h2" gutterBottom>
-          {query.trim() ? `Results for "${query}"` : 'Browse'}
+          {query.trim() ? `Results for "${query}"` : 'Browse by Filter'}
         </Typography>
         <Box sx={{ mb: 2 }}>
           <FilterBar />
         </Box>
-        <MovieGrid
-          movies={results}
-          loading={loading}
-          error={error}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          emptyMessage="No movies match your search/filters."
-        />
+        {isFilteredOrSearching && (
+          <MovieGrid
+            movies={results}
+            loading={loading}
+            error={error}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            emptyMessage="No movies match your search/filters."
+          />
+        )}
       </Box>
     </Container>
   );
