@@ -78,7 +78,7 @@ export default function MovieDetails() {
       </Button>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Box
             component="img"
             src={posterUrl(movie.poster_path)}
@@ -87,7 +87,7 @@ export default function MovieDetails() {
           />
         </Grid>
 
-        <Grid item xs={12} sm={8}>
+        <Grid size={{ xs: 12, sm: 8 }}>
           <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
             <Typography variant="h4" component="h1">
               {movie.title}
@@ -130,7 +130,7 @@ export default function MovieDetails() {
                       alt={member.name}
                       sx={{ width: 64, height: 64, mx: 'auto', mb: 0.5 }}
                     />
-                    <Typography variant="caption" display="block" noWrap sx={{ maxWidth: 80 }}>
+                    <Typography variant="caption" noWrap sx={{ display: 'block', maxWidth: 80 }}>
                       {member.name}
                     </Typography>
                   </Box>

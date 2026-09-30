@@ -35,7 +35,7 @@ export default function MovieGrid({ movies, loading, error, hasMore, onLoadMore,
     <Box>
       <Grid container spacing={2}>
         {movies.map((movie) => (
-          <Grid item key={movie.id} xs={6} sm={4} md={3} lg={2.4}>
+          <Grid key={movie.id} size={{ xs: 6, sm: 4, md: 3, lg: 2.4 }}>
             <MovieCard movie={movie} />
           </Grid>
         ))}
