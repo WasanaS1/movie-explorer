@@ -40,6 +40,8 @@ export default function Navbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
 
+  const isMovieDetailsPage = location.pathname.startsWith('/movie/');
+
   const handleLogout = () => {
     setMenuAnchor(null);
     logout();
@@ -86,7 +88,7 @@ export default function Navbar() {
         )}
 
         {/* Desktop: inline pill search bar */}
-        {!isMobile && (
+        {!isMobile && !isMovieDetailsPage && (
           <Box
             sx={{
               flexGrow: 1,
@@ -110,7 +112,7 @@ export default function Navbar() {
         )}
 
         {/* Mobile: expandable search row */}
-        {isMobile && mobileSearchOpen && (
+        {isMobile && mobileSearchOpen && !isMovieDetailsPage && (
           <Box
             sx={{
               flexGrow: 1,
@@ -140,11 +142,16 @@ export default function Navbar() {
           </Box>
         )}
 
-        <Box sx={{ flexGrow: isMobile && !mobileSearchOpen ? 1 : 0 }} />
+        {/* Grows to push the right-side icons to the edge whenever the search bar isn't the one growing */}
+        <Box
+          sx={{
+            flexGrow: (!isMobile && isMovieDetailsPage) || (isMobile && !mobileSearchOpen) ? 1 : 0,
+          }}
+        />
 
         {!(isMobile && mobileSearchOpen) && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
-            {isMobile && (
+            {isMobile && !isMovieDetailsPage && (
               <IconButton
                 onClick={() => setMobileSearchOpen(true)}
                 aria-label="Open search"

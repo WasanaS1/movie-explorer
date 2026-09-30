@@ -22,23 +22,7 @@ export default function Home() {
 
   return (
     <Container sx={{ py: 3 }}>
-      {!isFilteredOrSearching && (
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Trending This Week
-          </Typography>
-          <MovieGrid
-            movies={trending}
-            loading={trendingLoading}
-            error={trendingError}
-            hasMore={false}
-            onLoadMore={() => {}}
-            emptyMessage="No trending movies right now."
-          />
-        </Box>
-      )}
-
-      <Box>
+      <Box sx={{ mb: 4 }}>
         <Typography variant="h5" component="h2" gutterBottom>
           {query.trim() ? `Results for "${query}"` : 'Browse by Filter'}
         </Typography>
@@ -56,6 +40,22 @@ export default function Home() {
           />
         )}
       </Box>
+
+      {!isFilteredOrSearching && (
+        <Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Trending This Week
+          </Typography>
+          <MovieGrid
+            movies={trending}
+            loading={trendingLoading}
+            error={trendingError}
+            hasMore={false}
+            onLoadMore={() => {}}
+            emptyMessage="No trending movies right now."
+          />
+        </Box>
+      )}
     </Container>
   );
 }
